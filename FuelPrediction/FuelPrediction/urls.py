@@ -26,6 +26,11 @@ urlpatterns = [
 	# path('fqf/', include('fuelpredictionsystem.urls')),
 	# path('fqh/', include('fuelpredictionsystem.urls')),
 	path("clientRegistration/", v.register, name="clientRegistration"),
+	# path("clientProfile/", v.clientProfile, name="clientProfile"),
+	path("clientProfile/", v.profile, name="clientProfile"),
+	path('fqf/', v.fuelQuoteForm, name="fuelQuoteForm"),
+	path('fqh/', v.fuelQuoteHistory, name="fuelQuoteHistory"),
 	path('', include("django.contrib.auth.urls")),
 	#path("clientRegistration/", include('fuelpredictionsystem.urls')),
+	path("loginHome/", v.loginHome, name="Home"),
 ]

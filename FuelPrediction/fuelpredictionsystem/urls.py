@@ -14,5 +14,6 @@ urlpatterns = [
     # path('fqh/', views.fuelQuoteHistory, name='fuelpredictionsystem-fqh'),
     #path('clientRegistration/', views.clientRegistration, name='clientRegistration'),
     path('clientRegistration/', views.register, name='clientRegistration'),
+    path('clientProfile/', views.profile, name='clientProfile'),
 
 ]
