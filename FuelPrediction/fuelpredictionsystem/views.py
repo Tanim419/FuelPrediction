@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
-from .forms import RegisterForm
+from .forms import RegisterForm, EditProfileForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
 
@@ -58,3 +58,15 @@ def loginHome(request):
 def profile(request):
 	args = {'user': request.user}
 	return render(request, 'fuelpredictionsystem/clientProfile.html', args)
+
+def editProfile(request):
+	if request.method =='POST':
+		form = EditProfileForm(request.POST, instance=request.user)
+		if form.is_valid():
+			form.save()
+			return redirect('/clientProfile')
+
+	else:
+		form = EditProfileForm(instance=request.user)
+		args = {'form':form}
+		return render(request, 'fuelpredictionsystem/editProfile.html', args)

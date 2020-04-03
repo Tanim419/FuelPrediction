@@ -15,5 +15,8 @@ urlpatterns = [
     #path('clientRegistration/', views.clientRegistration, name='clientRegistration'),
     path('clientRegistration/', views.register, name='clientRegistration'),
     path('clientProfile/', views.profile, name='clientProfile'),
+    path('editProfile', views.editProfile, name='editProfile'),
+    path('fqf/', views.fuelQuoteForm, name='fuelpredictionsystem-fqf'),
+    path('fqh/', views.fuelQuoteHistory, name='fuelpredictionsystem-fqh'),
 
 ]

@@ -1,19 +1,21 @@
 {% extends "fuelpredictionsystem/base_loggedin.html"%}
+
+{% load crispy_forms_tags %}
+
 {% block content %}
 <h1>Manage Your Profile</h1>
 
-
-<div class="container">
-   <p> Username : {{ user }}</p>
-   <p> First Name : {{ user.first_name }}</p>
-   <p> Last Name : {{ user.last_name }}</p>
-   <p> Email : {{ user.email }}</p>
-</div>
-
-
-
-    <button type="update" class="btn btn-primary"><b>Update Profile</b></button>
+<form method="post" class="from-group">
+		{% csrf_token %}
+		{{form|crispy}}
+		<p> Username : {{ user }}</p>
+		<p> First Name : {{ user.first_name }}</p>
+		<p> Last Name : {{ user.last_name }}</p>
+		<p> Email : {{ user.email }}</p>
+		<p> City : {{ user.city }}</p>
+		<p> State : {{ user.state }}</p>
+    	<button onclick="location.href='/editProfile'"  type="button" class="btn btn-success"><b>Edit Profile</b></button>
+ </form>
  
-
-{% endblock content %}
+{% endblock%}
 
