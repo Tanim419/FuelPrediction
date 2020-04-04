@@ -22,10 +22,11 @@ urlpatterns = [
 	#path('', include('main.urls')), # main will be the name of your app
 	path('admin/', admin.site.urls),
 	path('', include('fuelpredictionsystem.urls')),
-	# path('clientProfile/', include('fuelpredictionsystem.urls')),
-	# path('fqf/', include('fuelpredictionsystem.urls')),
-	# path('fqh/', include('fuelpredictionsystem.urls')),
+	path('clientProfile/', include('fuelpredictionsystem.urls')),
+	path('fqf/', include('fuelpredictionsystem.urls')),
+	path('fqh/', include('fuelpredictionsystem.urls')),
 	path("clientRegistration/", v.register, name="clientRegistration"),
 	path('', include("django.contrib.auth.urls")),
+	path('success/', include('fuelpredictionsystem.urls'))
 	#path("clientRegistration/", include('fuelpredictionsystem.urls')),
 ]

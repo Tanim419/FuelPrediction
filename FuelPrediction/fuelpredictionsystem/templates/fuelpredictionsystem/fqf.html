@@ -1,22 +1,35 @@
 {% extends "fuelpredictionsystem/base.html"%}
+
+{% load crispy_forms_tags %}
 {% block content %}
+<!DOCTYPE html>
+
     <h1>Fuel Quote Form</h1>
-    <form>
-        <div class="form-group">
-            <label for="gallonsRequested"><b>Gallons Requested</b></label>
-            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Input Gallons (Required)">
+    <form  method="POST" action="/fqf/">
+        {% csrf_token %}
+
+       {{ form.gallons_requested|as_crispy_field}}
+        
+        <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+            {{ form.delivery_date|as_crispy_field }}
+            <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            </div>
         </div>
-        <!-- Not sure how to get the datetimepicker to work -->
-        <div class="form-group">
-            <label for="deliveryDate"><b>Delivery Date</b></label>
-            <input type="datetime" class="form-control" id="formGroupExampleInput2" placeholder="mm-dd-yy">
-        </div>
-		
-		<div class="form-group">
-            <label for="deliveryAddress"><b>Delivery Address:</b></label>
-            <input type="text" class="form-control" id="formGroupExampleInput3" placeholder="2111 HollyHall St">
-        </div>
-		
+
+        <script>
+            $(function () {
+              $("#datetimepicker1").datetimepicker({
+                format: 'DD/MM/YYYY HH:mm',
+                beforeShow: function(){
+                    $(".ui-datepicker").css('font-size', 6)
+                }
+              });
+            });
+        </script>
+
+        {{ form.delivery_address|as_crispy_field}}
+
 		<div class="form-group">
             <label for="suggetedPrice"><b>Suggested Price:</b></label>
             <input type="text" class="form-control" id="formGroupExampleInput4" placeholder="Suggested Price">
@@ -27,14 +40,6 @@
             <input type="text" class="form-control" id="formGroupExampleInput5" placeholder="Total Amount Due">
         </div>
         
-		<!--
-		<div>
-              <ul class="list-group list-group-flush">
-                  <li class="list-group-item">Delivery Address: </li>
-                  <li class="list-group-item">Suggested Price: </li>
-                  <li class="list-group-item">Total Amount Due: </li>
-              </ul>
-        </div>
-		-->
+        <button type="submit", class='btn btn-primary'>Get Price</button>
     </form>    
 {% endblock content %}
