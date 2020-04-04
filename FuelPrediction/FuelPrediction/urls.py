@@ -34,4 +34,5 @@ urlpatterns = [
 	#path("clientRegistration/", include('fuelpredictionsystem.urls')),
 	path("loginHome/", v.loginHome, name="Home"),
 	path("editProfile/", v.editProfile, name="editProfile"),
+	path('success/', include('fuelpredictionsystem.urls')),
 ]

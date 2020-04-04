@@ -7,6 +7,10 @@
   <form method="post" class="from-group">
     {% csrf_token %}
     {{form|crispy}}
+    <br>
+    <br>
+    <br>
+    <br>
     <h2>Welcome to fuel quote price system Mr. {{ user.last_name }}</h2> 
     <br>
     <button onclick="location.href='/fqf'" type="button" class="btn btn-success">Get a Fuel Quote</button>  

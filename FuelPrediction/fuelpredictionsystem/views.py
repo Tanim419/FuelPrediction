@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
-from .forms import RegisterForm, EditProfileForm
+from .forms import RegisterForm, EditProfileForm, FuelQuoteForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
 from .models import UserProfile
@@ -79,3 +79,18 @@ def editProfile(request):
 def go_home_page(request):
 	product = get_object_or_404(UserProfile)
 	return render(request, 'fuelpredictionsystem/loginHome.html', {'product' : product})
+
+
+
+def fuelQuoteForm(request):
+	if request.method == 'POST':
+		form = FuelQuoteForm(request.POST)
+		if form.is_valid():
+			form.save()
+		return redirect("/success")
+	else:
+		form = FuelQuoteForm()
+	return render(request, 'fuelpredictionsystem/fqf.html', {"form":form})
+
+def success(request):
+	return render(request, 'fuelpredictionsystem/success.html')
