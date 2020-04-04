@@ -1,10 +1,13 @@
 #from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from .forms import RegisterForm, EditProfileForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
+from .models import UserProfile
+
 
 
 def index(request):
@@ -70,3 +73,9 @@ def editProfile(request):
 		form = EditProfileForm(instance=request.user)
 		args = {'form':form}
 		return render(request, 'fuelpredictionsystem/editProfile.html', args)
+
+
+@login_required
+def go_home_page(request):
+	product = get_object_or_404(UserProfile)
+	return render(request, 'fuelpredictionsystem/loginHome.html', {'product' : product})
