@@ -5,30 +5,34 @@
 <!DOCTYPE html>
     <br><br><br>
     <h1>Fuel Quote Form</h1>
+    <h2>id="answer"</h2>
     <form  method="POST" action="/fqf/">
         {% csrf_token %}
-
-       {{ form.gallons_requested|as_crispy_field}}
+        {{form|crispy}}
+<!--        {{ form.gallons_requested|as_crispy_field}} -->
         
-        <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
-            {{ form.delivery_date|as_crispy_field }}
-            <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+<!--         <div class="input-group date" id="datetimepicker1" data-target-input="nearest"> -->
+<!--             {{ form.delivery_date|as_crispy_field }} -->
+<!--             <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-            </div>
-        </div>
+                <script>
+                    $(function () {
+                      $("#datetimepicker1").datetimepicker({
+                        format: 'DD/MM/YYYY HH:mm',
+                        beforeShow: function(){
+                            $(".ui-datepicker").css('font-size', 1)
+                        }
+                      });
+                    });
+                </script>
+            </div> -->
+<!-- 
 
-        <script>
-            $(function () {
-              $("#datetimepicker1").datetimepicker({
-                format: 'DD/MM/YYYY HH:mm',
-                beforeShow: function(){
-                    $(".ui-datepicker").css('font-size', 6)
-                }
-              });
-            });
-        </script>
+ -->
 
-        {{ form.delivery_address|as_crispy_field}}
+
+
+<!--         {{ form.delivery_address|as_crispy_field}} -->
 
         <div class="form-group">
             <label for="suggetedPrice"><b>Suggested Price:</b></label>
@@ -37,9 +41,37 @@
         
         <div class="form-group">
             <label for="amountDue"><b>Total Amount Due:</b></label>
-            <input type="text" class="form-control" id="formGroupExampleInput5" placeholder="Total Amount Due">
+            <input type="text" readonly class="form-control" id="formGroupExampleInput5" placeholder="Total Amount Due">
         </div>
         
-        <button type="submit", class='btn btn-success'>Get Price</button>
+        <button onclick="calculate()" style="margin:10px;height:50px;width:200px", class='btn btn-success'>Get Price</button>
+            <script>
+                function calculate() {
+                    if (gallons_requested > 1000) {
+                        var g_r_Factor = 0.03;
+                    }
+                    else
+                        var g_r_Factor = 0.02;
+
+                    if (location == "Texas") {
+                        var loc_factor = 0.02;
+                    }
+                    else
+                        var loc_factor = 0.04;
+
+                    if (season== "Summer"){
+                        var season_factor = 0.04;
+                    }
+                    else
+                        var season_factor = 0.03;
+
+                    var margin = (loc_factor - .01 + g_r_Factor + .1 + season_factor);
+                    var Suggested_Price = (1.50 + margin) * 1.50; 
+
+                    document.getElementById("answer").innerHTML = Suggested_Price;
+
+                } 
+            </script>
+        <button type="submit", style="margin:10px;height:50px;width:200px", class='btn btn-success'>Submit Quote</button>
     </form>    
 {% endblock content %}

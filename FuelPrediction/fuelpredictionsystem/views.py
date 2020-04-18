@@ -3,10 +3,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
-from .forms import RegisterForm, EditProfileForm, FuelQuoteForm
+from .forms import RegisterForm, EditProfileForm, UserProfileFrom
+# from .forms import RegisterForm, EditProfileForm, FuelQuoteForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
 from .models import UserProfile
+from django.http import HttpResponseRedirect
 
 
 
@@ -38,16 +40,23 @@ def fuelQuoteHistory(request):
 # 		form = RegisterForm()
 # 		return render(request, "fuelpredictionsystem/clientRegistration.html", {"form":form})
 
-def register(response):
-	if response.method == 'POST':
-		form = RegisterForm(response.POST)
-		if form.is_valid():
-			form.save()
+def register(request):
+	if request.method == 'POST':
+		form = RegisterForm(request.POST)
+		profile_form = UserProfileFrom(request.POST)
+
+		if form.is_valid() and profile_form.is_valid():
+			user = form.save()
+			profile = profile_form.save(commit=False)
+			profile.user = user
+			profile.save()
+			
 			return redirect("/home")
 	else:
 		form = RegisterForm()
-		args = {"form":form}
-	return render(response, "fuelpredictionsystem/clientRegistration.html", args)
+		profile_form= UserProfileFrom()
+	args = {"form":form, "profile_form":profile_form}
+	return render(request, "fuelpredictionsystem/clientRegistration.html", args)
 
 
 # def profile(request):
@@ -65,13 +74,16 @@ def profile(request):
 def editProfile(request):
 	if request.method =='POST':
 		form = EditProfileForm(request.POST, instance=request.user)
-		if form.is_valid():
+		p_form = EditProfileForm(request.POST, instance=request.user.userprofile)
+		if form.is_valid() and p_form.is_valid():
 			form.save()
+			p_form.save()
 			return redirect('/clientProfile')
 
 	else:
 		form = EditProfileForm(instance=request.user)
-		args = {'form':form}
+		p_form = EditProfileForm(request.POST, instance=request.user.userprofile)
+		args = {'form':form, 'p_form':p_form}
 		return render(request, 'fuelpredictionsystem/editProfile.html', args)
 
 
@@ -87,10 +99,11 @@ def fuelQuoteForm(request):
 		form = FuelQuoteForm(request.POST)
 		if form.is_valid():
 			form.save()
-		return redirect("/success")
+		# return redirect("/fuelQuoteForm")
+		return HttpResponseRedirect(self.request.path_info)
 	else:
 		form = FuelQuoteForm()
 	return render(request, 'fuelpredictionsystem/fqf.html', {"form":form})
 
-def success(request):
-	return render(request, 'fuelpredictionsystem/success.html')
+# def success(request):
+# 	return render(request, 'fuelpredictionsystem/success.html')

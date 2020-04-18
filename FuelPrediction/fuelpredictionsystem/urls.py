@@ -18,6 +18,6 @@ urlpatterns = [
     path('editProfile', views.editProfile, name='editProfile'),
     path('fqf/', views.fuelQuoteForm, name='fuelpredictionsystem-fqf'),
     path('fqh/', views.fuelQuoteHistory, name='fuelpredictionsystem-fqh'),
-    path('success/', views.success),
+    # path('success/', views.success),
 
 ]

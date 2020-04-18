@@ -10,11 +10,11 @@
 		{% csrf_token %}
 		{{form|crispy}}
 		<p> Username : {{ user }}</p>
-		<p> First Name : {{ user.first_name }}</p>
-		<p> Last Name : {{ user.last_name }}</p>
-		<p> Email : {{ user.email }}</p>
-		<p> City : {{ user.city }}</p>
-		<p> State : {{ user.state }}</p>
+		<p> First Name : {{ user.userprofile.fullname }}</p>
+		<p> Last Name : {{ user.userprofile.address }}</p>
+		<p> Email : {{ user.userprofile.city }}</p>
+<!-- 		<p> City : {{ user.city }}</p>
+		<p> State : {{ user.state }}</p> -->
     	<button onclick="location.href='/editProfile'"  type="button" class="btn btn-success"><b>Edit Profile</b></button>
  </form>
  
