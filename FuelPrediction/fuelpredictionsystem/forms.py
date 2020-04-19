@@ -52,64 +52,53 @@ class EditProfileForm(UserChangeForm):
 		
 
 
-# class  FuelQuoteForm(forms.Form):
-# 	class Meta:
-# 		model = User
-# 		fields = ["gallons_requested", "delivery_date", "delivery_address", "location", "season"]
+class  FuelQuoteForm(forms.Form):
+	class Meta:
+		model = User
+		fields = ["gallons_requested", "delivery_date", "delivery_address", "location", "season"]
 
-# 	gallons_requested = forms.IntegerField(
-# 		help_text="Input Gallons (required)", 
-# 		required=True, 
-# 		max_value=10000, 
-# 		min_value=1
-# 		)
+	gallons_requested = forms.IntegerField( 
+		required=True, 
+		max_value=10000, 
+		min_value=1
+		)
 	
-# 	delivery_date = forms.DateField(
-# 		help_text="Please pick a date",
-# 		required=True,
-# 		localize=True,
-# 		widget=forms.DateInput(format='%m/%d/%Y', attrs={
-# 			'class': 'form-control datetimepicker-input',
-# 			'data-target': '#datetimepicker1'}),
-# 		input_formats='%m/%d/%Y'
-# 	)
+	delivery_date = forms.DateField(
+		required=True,
+		localize=True,
+		widget=forms.DateInput(format='%m/%d/%Y', attrs={
+			'class': 'form-control datetimepicker-input',
+			'data-target': '#datetimepicker1'}),
+		input_formats='%m/%d/%Y'
+	)
 
-# 	delivery_address = forms.CharField(
-# 		help_text="Please enter your address",
-# 		required=True)
+	delivery_address = forms.CharField(required=True)
 
-# 	location = forms.ChoiceField(widget=forms.Select(choices=STATE),
-# 		help_text="Please select",
-# 		required=True)
 
-# 	season = forms.ChoiceField(widget=forms.Select(choices=RATE),
-# 		help_text="Please select",
-# 		required=True)
+	def clean_delivery_date(self):
+		data = self.cleaned_data['delivery_date']
 
-# 	def clean_delivery_date(self):
-# 		data = self.cleaned_data['delivery_date']
+		# Check if a date in not in the past
+		if data < datetime.date.today():
+			raise ValidationError(_('Invalid date - Date must be in the future'))
 
-# 		# Check if a date in not in the past
-# 		if data < datetime.date.today():
-# 			raise ValidationError(_('Invalid date - Date must be in the future'))
+		# Check if data is not the current day
+		if data == datetime.data.today():
+			raise ValidationError(_('Invalid date - Date must be in the future'))
 
-# 		# Check if data is not the current day
-# 		if data == datetime.data.today():
-# 			raise ValidationError(_('Invalid date - Date must be in the future'))
+		return data
 
-# 		return data
+	# def save(self, commit=True):
+	# 	user = super(FuelQuoteForm, self).save(commit=False)
+	# 	user.gallons_requested = self.cleaned_data['gallons_requested']
+	# 	user.delivery_date = self.cleaned_data['delivery_date']
+	# 	user.delivery_address = self.cleaned_data['delivery_address']
+	# 	user.location = self.cleaned_data['location']
+	# 	user.season = self.cleaned_data['season']
 
-# 	def save(self, commit=True):
-# 		user = super(FuelQuoteForm, self).save(commit=False)
-# 		user.gallons_requested = self.cleaned_data['gallons_requested']
-# 		user.delivery_date = self.cleaned_data['delivery_date']
-# 		user.delivery_address = self.cleaned_data['delivery_address']
-# 		user.location = self.cleaned_data['location']
-# 		user.season = self.cleaned_data['season']
-
-# 		if commit:
-# 			user.save()
-# 		return user
+	# 	if commit:
+	# 		user.save()
+	# 	return user
 
 
 # class  FuelQuoteForm(forms.ModelForm):

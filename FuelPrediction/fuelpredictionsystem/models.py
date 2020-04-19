@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 
 class UserProfile(models.Model):
-	STATE = (('INSTATE', 'Texas'),('OUTSTATE', 'Out of Texas'))
+	STATE = (('TX', 'Texas'),('OTHERS', 'Out of Texas'))
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	# user = models.ForeignKey(User, on_delete=models.CASCADE)
 	fullname = models.CharField(max_length=100, default='')

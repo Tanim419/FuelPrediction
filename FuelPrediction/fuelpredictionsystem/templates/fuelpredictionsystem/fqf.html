@@ -5,70 +5,76 @@
 <!DOCTYPE html>
     <br><br><br>
     <h1>Fuel Quote Form</h1>
-    <h2>id="answer"</h2>
     <form  method="POST" action="/fqf/">
         {% csrf_token %}
-        {{form|crispy}}
-<!--        {{ form.gallons_requested|as_crispy_field}} -->
+        <!-- {{form|crispy}}  -->     
+        {{ form.gallons_requested|as_crispy_field}}
         
-<!--         <div class="input-group date" id="datetimepicker1" data-target-input="nearest"> -->
-<!--             {{ form.delivery_date|as_crispy_field }} -->
-<!--             <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+        <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+            {{ form.delivery_date|as_crispy_field }}
+            <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                <script>
-                    $(function () {
-                      $("#datetimepicker1").datetimepicker({
-                        format: 'DD/MM/YYYY HH:mm',
-                        beforeShow: function(){
-                            $(".ui-datepicker").css('font-size', 1)
-                        }
-                      });
-                    });
-                </script>
-            </div> -->
-<!-- 
+            </div>
+        </div>
 
- -->
+        <script>
+            $(function () {
+              $("#datetimepicker1").datetimepicker({
+                format: 'DD/MM/YYYY HH:mm',
+                beforeShow: function(){
+                    $(".ui-datepicker").css('font-size', 6)
+                }
+              });
+            });
+        </script>
+
+        <!-- {{ form.delivery_address|as_crispy_field }} -->
 
 
+        <div class="form-group">
+            <label for="deliveryaddress"><b>Delivery Address:</b></label>
+            <input type="text" readonly class="form-control" id="formGroupExampleInput3" value= "{{ user.userprofile.address }} {{ user.userprofile.city }} {{ user.userprofile.state }}" >
 
-<!--         {{ form.delivery_address|as_crispy_field}} -->
+        </div>
 
         <div class="form-group">
             <label for="suggetedPrice"><b>Suggested Price:</b></label>
-            <input type="text" class="form-control" id="formGroupExampleInput4" placeholder="Suggested Price">
+            <input type="text" readonly class="form-control" id="formGroupExampleInput4" placeholder="Suggested Price">
         </div>
         
         <div class="form-group">
             <label for="amountDue"><b>Total Amount Due:</b></label>
-            <input type="text" readonly class="form-control" id="formGroupExampleInput5" placeholder="Total Amount Due">
+            <input type="text" readonly class="form-control" id="formGroupExampleInput5" placeholder="Total Due">
         </div>
         
-        <button onclick="calculate()" style="margin:10px;height:50px;width:200px", class='btn btn-success'>Get Price</button>
+        <button type="button" onclick="calculate()" style="margin:10px;height:50px;width:200px", class='btn btn-success' >Get Price</button>
             <script>
+                
                 function calculate() {
-                    if (gallons_requested > 1000) {
-                        var g_r_Factor = 0.03;
-                    }
-                    else
+                    var gallons = document.getElementById("id_gallons_requested").value;
+                    if (gallons > 1000){
                         var g_r_Factor = 0.02;
+                    } else {
+                        g_r_Factor = 0.03;
+                    } 
+                    var location = "{{ user.userprofile.state }}"
 
-                    if (location == "Texas") {
-                        var loc_factor = 0.02;
+
+                    if (location =="TX"){
+                        var location_fact = 0.02
+                    } else{
+                        location_fact = 0.04
                     }
-                    else
-                        var loc_factor = 0.04;
+                    /*var location_fact = 0.02*/
+                    var history_factor = 0.01
+                    var company_factor = 0.1
+                    var rate_factor =  0.03
+                    var margin = 1.50 * (location_fact - history_factor + g_r_Factor + company_factor +rate_factor)
+                    var Suggested_Price = 1.50 + margin; 
+                    var Total = Suggested_Price * gallons; 
 
-                    if (season== "Summer"){
-                        var season_factor = 0.04;
-                    }
-                    else
-                        var season_factor = 0.03;
-
-                    var margin = (loc_factor - .01 + g_r_Factor + .1 + season_factor);
-                    var Suggested_Price = (1.50 + margin) * 1.50; 
-
-                    document.getElementById("answer").innerHTML = Suggested_Price;
+                    document.getElementById("formGroupExampleInput4").value = Suggested_Price;
+                    document.getElementById("formGroupExampleInput5").value = Total;
 
                 } 
             </script>
