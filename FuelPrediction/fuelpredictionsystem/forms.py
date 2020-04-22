@@ -25,7 +25,7 @@ class RegisterForm(UserCreationForm):
 
 
 class  FuelQuoteForm(forms.Form):
-	class Metal:
+	class Meta:
 		model = User
 		fields = ["gallons_requested", "delivery_date", "delivery_address"]
 
