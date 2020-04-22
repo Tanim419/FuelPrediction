@@ -1,14 +1,14 @@
-{% extends "fuelpredictionsystem/base.html"%}
+{% extends "fuelpredictionsystem/base_loggedin.html"%}
 
 {% load crispy_forms_tags %}
 {% block content %}
 <!DOCTYPE html>
-
+    <br><br><br>
     <h1>Fuel Quote Form</h1>
     <form  method="POST" action="/fqf/">
         {% csrf_token %}
-
-       {{ form.gallons_requested|as_crispy_field}}
+        <!-- {{form|crispy}}  -->     
+        {{ form.gallons_requested|as_crispy_field}}
         
         <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
             {{ form.delivery_date|as_crispy_field }}
@@ -20,23 +20,64 @@
         <script>
             $(function () {
               $("#datetimepicker1").datetimepicker({
-                format: 'DD/MM/YYYY HH:mm'
+                format: 'DD/MM/YYYY HH:mm',
+                beforeShow: function(){
+                    $(".ui-datepicker").css('font-size', 6)
+                }
               });
             });
         </script>
 
-        {{ form.delivery_address|as_crispy_field}}
+        <!-- {{ form.delivery_address|as_crispy_field }} -->
 
-		<div class="form-group">
-            <label for="suggetedPrice"><b>Suggested Price:</b></label>
-            <input type="text" class="form-control" id="formGroupExampleInput4" placeholder="Suggested Price">
+
+        <div class="form-group">
+            <label for="deliveryaddress"><b>Delivery Address:</b></label>
+            <input type="text" readonly class="form-control" id="formGroupExampleInput3" value= "{{ user.userprofile.address }} {{ user.userprofile.city }} {{ user.userprofile.state }}" >
+
         </div>
-		
-		<div class="form-group">
-            <label for="amountDue"><b>Total Amount Due:</b></label>
-            <input type="text" class="form-control" id="formGroupExampleInput5" placeholder="Total Amount Due">
+
+        <div class="form-group">
+            <label for="suggetedPrice"><b>Suggested Price:</b></label>
+            <input type="text" readonly class="form-control" id="formGroupExampleInput4" placeholder="Suggested Price">
         </div>
         
-        <button type="submit", class='btn btn-primary'>Get Price</button>
+        <div class="form-group">
+            <label for="amountDue"><b>Total Amount Due:</b></label>
+            <input type="text" readonly class="form-control" id="formGroupExampleInput5" placeholder="Total Due">
+        </div>
+        
+        <button type="button" onclick="calculate()" style="margin:10px;height:50px;width:200px", class='btn btn-success' >Get Price</button>
+            <script>
+                
+                function calculate() {
+                    var gallons = document.getElementById("id_gallons_requested").value;
+                    if (gallons > 1000){
+                        var g_r_Factor = 0.02;
+                    } else {
+                        g_r_Factor = 0.03;
+                    } 
+                    var location = "{{ user.userprofile.state }}"
+
+
+                    if (location =="TX"){
+                        var location_fact = 0.02
+                    } else{
+                        location_fact = 0.04
+                    }
+                    /*var location_fact = 0.02*/
+                    var history_factor = 0.01
+                    var company_factor = 0.1
+                    var rate_factor =  0.03
+                    var margin = 1.50 * (location_fact - history_factor + g_r_Factor + company_factor +rate_factor)
+                    var Suggested_Price = 1.50 + margin; 
+                    var Total = Suggested_Price * gallons; 
+
+                    document.getElementById("formGroupExampleInput4").value = Suggested_Price;
+                    document.getElementById("formGroupExampleInput5").value = Total;
+
+                } 
+            </script>
+        <button type="submit", style="margin:10px;height:50px;width:200px", class='btn btn-success'>Submit Quote</button>
     </form>    
 {% endblock content %}
