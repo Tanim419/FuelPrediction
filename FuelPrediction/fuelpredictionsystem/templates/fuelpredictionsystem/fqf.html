@@ -5,12 +5,13 @@
 <!DOCTYPE html>
     <br><br><br>
     <h1>Fuel Quote Form</h1>
-    <form  method="POST" action="/fqf/">
+    <form  method="POST" action="{% url 'fqf' %}">
         {% csrf_token %}
         <!-- {{form|crispy}}  -->     
         {{ form.gallons_requested|as_crispy_field}}
+        {{ form.delivery_date}}
         
-        <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+    <!--    <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
             {{ form.delivery_date|as_crispy_field }}
             <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -20,13 +21,15 @@
         <script>
             $(function () {
               $("#datetimepicker1").datetimepicker({
-                format: 'DD/MM/YYYY HH:mm',
+                timepicker: false,
+                datepicker: true,
+                format: 'DD/MM/YYYY',
                 beforeShow: function(){
                     $(".ui-datepicker").css('font-size', 6)
                 }
               });
             });
-        </script>
+        </script> -->
 
         <!-- {{ form.delivery_address|as_crispy_field }} -->
 

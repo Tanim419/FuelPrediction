@@ -4,9 +4,10 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-import datetime
+from django.forms import ModelForm
 # from .models import PriceModule
 from .models import UserProfile
+from .models import FuelQuoteForm
 
 
 
@@ -52,41 +53,10 @@ class EditProfileForm(UserChangeForm):
 		
 
 
-class  FuelQuoteForm(forms.Form):
+class  FuelQuoteForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ["gallons_requested", "delivery_date", "delivery_address", "location", "season"]
-
-	gallons_requested = forms.IntegerField( 
-		required=True, 
-		max_value=10000, 
-		min_value=1
-		)
-	
-	delivery_date = forms.DateField(
-		required=True,
-		localize=True,
-		widget=forms.DateInput(format='%m/%d/%Y', attrs={
-			'class': 'form-control datetimepicker-input',
-			'data-target': '#datetimepicker1'}),
-		input_formats='%m/%d/%Y'
-	)
-
-	delivery_address = forms.CharField(required=True)
-
-
-	def clean_delivery_date(self):
-		data = self.cleaned_data['delivery_date']
-
-		# Check if a date in not in the past
-		if data < datetime.date.today():
-			raise ValidationError(_('Invalid date - Date must be in the future'))
-
-		# Check if data is not the current day
-		if data == datetime.data.today():
-			raise ValidationError(_('Invalid date - Date must be in the future'))
-
-		return data
 
 	# def save(self, commit=True):
 	# 	user = super(FuelQuoteForm, self).save(commit=False)

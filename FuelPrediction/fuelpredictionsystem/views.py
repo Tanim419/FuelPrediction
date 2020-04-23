@@ -8,6 +8,7 @@ from .forms import RegisterForm, EditProfileForm, UserProfileFrom,FuelQuoteForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
 from .models import UserProfile
+from .forms import FuelQuoteForm
 from django.http import HttpResponseRedirect
 
 
@@ -22,8 +23,8 @@ def home(request):
 # def clientProfile(request):
 # 	return render(request, 'fuelpredictionsystem/clientProfile.html')
 
-def fuelQuoteForm(request):
-	return render(request, 'fuelpredictionsystem/fqf.html')
+#def fuelQuoteForm(request):
+#	return render(request, 'fuelpredictionsystem/fqf.html')
  
 def fuelQuoteHistory(request):
 	return render(request, 'fuelpredictionsystem/fqh.html')
@@ -96,11 +97,12 @@ def go_home_page(request):
 
 
 def fuelQuoteForm(request):
+	form = FuelQuoteForm()
 	if request.method == 'POST':
 		form = FuelQuoteForm(request.POST)
 		if form.is_valid():
-			# form.save()
-			return render(request, 'fuelpredictionsystem/fqf.html', {"form":form})
+			form.save()
+			return render(request, 'fuelpredictionsystem/fqf.html')
 		# return redirect("/fuelQuoteForm")
 		#return HttpResponseRedirect(self.request.path_info)
 	else:
