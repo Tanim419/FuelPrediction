@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fuelpredictionsystem.apps.FuelpredictionsystemConfig',
+    'django_readonly_field',
 ]
 
 MIDDLEWARE = [

@@ -1,13 +1,13 @@
-#from django.http import HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
-from .forms import RegisterForm, EditProfileForm, UserProfileFrom,FuelQuoteForm
+from .forms import RegisterForm, EditProfileForm, UserProfileFrom, FuelQuoteHistory, FuelHistoryPage
 # from .forms import RegisterForm, EditProfileForm, FuelQuoteForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
-from .models import UserProfile
+from .models import UserProfile, PriceHistoryModule
 from django.http import HttpResponseRedirect
 
 
@@ -22,11 +22,25 @@ def home(request):
 # def clientProfile(request):
 # 	return render(request, 'fuelpredictionsystem/clientProfile.html')
 
-def fuelQuoteForm(request):
-	return render(request, 'fuelpredictionsystem/fqf.html')
+# def fuelQuoteForm(request):
+# 	return render(request, 'fuelpredictionsystem/fqf.html')
  
 def fuelQuoteHistory(request):
-	return render(request, 'fuelpredictionsystem/fqh.html')
+	# def get(self, request):
+	form = FuelHistoryPage()
+	# form.instance.user = request.user
+	history_list = PriceHistoryModule.objects.filter(user=request.user)
+	# output = ",".join([(str(PriceHistory.gallons_requested) + '\t' 
+	# 	+str(PriceHistory.delivery_date) + '\t'
+	# 	+str(PriceHistory.delivery_address)+ '\t' 
+	# 	+str(PriceHistory.suggested_price)+ "\t"
+	# 	+str(PriceHistory.total_due) + "\n") for PriceHistory in history_list])
+	# print(output)
+	args ={'history_list': history_list}
+
+	return render(request, 'fuelpredictionsystem/fqh.html', args)
+
+	
 	
 # def clientRegistration(request):
 #     return render(request, 'fuelpredictionsystem/clientRegistration.html')
@@ -96,16 +110,22 @@ def go_home_page(request):
 
 
 def fuelQuoteForm(request):
+	history_list1 = PriceHistoryModule.objects.filter(user=request.user)
 	if request.method == 'POST':
-		form = FuelQuoteForm(request.POST)
+		# form = RegisterForm(request.POST)
+		form = FuelQuoteHistory(request.POST)
+		# print(history_list1)
 		if form.is_valid():
-			# form.save()
-			return render(request, 'fuelpredictionsystem/fqf.html', {"form":form})
+			form.save(commit=False)
+			form.instance.user = request.user
+			form.save()
+			args = {"form":form, "history_list1":history_list1}
+			return render(request, 'fuelpredictionsystem/fqf.html', args )
 		# return redirect("/fuelQuoteForm")
 		#return HttpResponseRedirect(self.request.path_info)
 	else:
-		form = FuelQuoteForm()
-	return render(request, 'fuelpredictionsystem/fqf.html', {"form":form})
+		form = FuelQuoteHistory()
+	return render(request, 'fuelpredictionsystem/fqf.html', {"form":form, "history_list1":history_list1})
 
 
 # def fuelQuoteForm(request):

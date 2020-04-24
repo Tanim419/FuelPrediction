@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 import datetime
-# from .models import PriceModule
+from django.forms import ModelForm
+from .models import PriceHistoryModule
 from .models import UserProfile
 
 
@@ -37,6 +38,10 @@ class UserProfileFrom(forms.ModelForm):
 
 
 
+
+
+
+
 class EditProfileForm(UserChangeForm):
 	class Meta:
 		model = UserProfile
@@ -49,31 +54,28 @@ class EditProfileForm(UserChangeForm):
 # 		model = User
 # 		fields = ('email', 'first_name', 'last_name', 'password')
 # 		# fields = ('email', 'first_name', 'last_name', 'address', 'city', 'state', 'zipcode', 'password')
-		
-
-
-class  FuelQuoteForm(forms.Form):
-	class Meta:
-		model = User
-		fields = ["gallons_requested", "delivery_date", "delivery_address", "location", "season"]
-
-	gallons_requested = forms.IntegerField( 
-		required=True, 
-		max_value=10000, 
-		min_value=1
-		)
 	
-	delivery_date = forms.DateField(
-		required=True,
-		localize=True,
-		widget=forms.DateInput(format='%m/%d/%Y', attrs={
-			'class': 'form-control datetimepicker-input',
-			'data-target': '#datetimepicker1'}),
-		input_formats='%m/%d/%Y'
-	)
+class DateInput(forms.DateInput):
+    input_type = 'date'
 
-	delivery_address = forms.CharField(required=True)
+class FuelQuoteHistory(forms.ModelForm):
+	class Meta:
+		model = PriceHistoryModule
+		fields = ['gallons_requested',  'delivery_date', 'delivery_address','suggested_price', 'total_due']
+		widgets = {
+		            'delivery_date': DateInput(),
+		        }
 
+	def save(self, commit=True):
+		user = super().save(commit=False)
+		user.gallons_requested = self.cleaned_data['gallons_requested']
+		user.delivery_date = self.cleaned_data['delivery_date']
+		user.delivery_address = self.cleaned_data['delivery_address']
+		user.suggested_price = self.cleaned_data['suggested_price']
+		user.total_due = self.cleaned_data['total_due']
+		if commit:
+			user.save()
+		return user
 
 	def clean_delivery_date(self):
 		data = self.cleaned_data['delivery_date']
@@ -83,10 +85,55 @@ class  FuelQuoteForm(forms.Form):
 			raise ValidationError(_('Invalid date - Date must be in the future'))
 
 		# Check if data is not the current day
-		if data == datetime.data.today():
-			raise ValidationError(_('Invalid date - Date must be in the future'))
+		# if data == datetime.data.today():
+		# 	raise ValidationError(_('Invalid date - Date must be in the future'))
 
 		return data
+
+class FuelHistoryPage(forms.ModelForm):
+	post = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Write a post...'}))
+	class Meta:
+		model = PriceHistoryModule
+		fields = ['gallons_requested',]
+
+
+# class  FuelQuoteForm(forms.Form):
+# 	class Meta:
+# 		model = User
+# 		fields = ["gallons_requested", "delivery_date", "delivery_address", "suggested_price", "total_due"]
+
+# 	gallons_requested = forms.IntegerField( 
+# 		required=True, 
+# 		max_value=10000, 
+# 		min_value=1
+# 		)
+	
+# 	delivery_date = forms.DateField(
+# 		required=True,
+# 		localize=True,
+# 		widget=forms.DateInput(format='%m/%d/%Y', attrs={
+# 			'class': 'form-control datetimepicker-input',
+# 			'data-target': '#datetimepicker1'}),
+# 		input_formats='%m/%d/%Y'
+# 	)
+
+# 	delivery_address = forms.CharField(required=True)
+# 	suggested_price = forms.FloatField()
+# 	total_due = forms.FloatField()
+
+
+# 	def clean_delivery_date(self):
+# 		data = self.cleaned_data['delivery_date']
+
+# 		# Check if a date in not in the past
+# 		if data < datetime.date.today():
+# 			raise ValidationError(_('Invalid date - Date must be in the future'))
+
+# 		# Check if data is not the current day
+# 		if data == datetime.data.today():
+# 			raise ValidationError(_('Invalid date - Date must be in the future'))
+
+# 		return data
 
 	# def save(self, commit=True):
 	# 	user = super(FuelQuoteForm, self).save(commit=False)

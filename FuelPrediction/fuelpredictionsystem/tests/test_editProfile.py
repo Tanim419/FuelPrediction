@@ -21,9 +21,12 @@ class TestEditProfileForm(TestCase):
 
 	    #test valid data
 	    valid_data = {
-		  "email" : "entima@gmail.com",
-		  "first_name" : "Imtiaz",
-		  "last_name" : "Nur"
+		  
+		  "fullname" : "Imtiaz",
+		  "address" : "2111 Holly Hall",
+		  "city" : "Houston",
+		  "state" : "OTHERS",
+		  "zipcode" : "77045"
 	    }
 	    form = EditProfileForm(data=valid_data)
 	    form.is_valid()

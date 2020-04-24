@@ -21,7 +21,16 @@ class UserProfile(models.Model):
 		return self.user.username
 
 
-
+class PriceHistoryModule(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+	gallons_requested = models.IntegerField()
+	delivery_date = models.DateField()
+	delivery_address = models.CharField(max_length=200)
+	suggested_price = models.FloatField()
+	total_due = models.FloatField()
+	
+	# def __str__(self):
+	# 	return self.user.username
 
 
 
@@ -41,10 +50,3 @@ class UserProfile(models.Model):
 # )
 
 
-# class PriceModule(models.Model):  
-#     gallons_requested = models.IntegerField(default=1,validators=[MaxValueValidator(100000),MinValueValidator(1)])
-#     delivery_date = models.DateField()
-#     delivery_address = models.CharField(max_length=200)
-#     location = models.CharField(max_length=15, choices=STATE)
-#     season = models.CharField(max_length=20, choices=SEASON)
-#   

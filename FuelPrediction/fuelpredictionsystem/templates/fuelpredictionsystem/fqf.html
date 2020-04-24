@@ -7,17 +7,49 @@
     <h1>Fuel Quote Form</h1>
     <form  method="POST" action="/fqf/">
         {% csrf_token %}
-        <!-- {{form|crispy}}  -->     
-        {{ form.gallons_requested|as_crispy_field}}
-        
-        <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
-            {{ form.delivery_date|as_crispy_field }}
+        {{form|crispy}}
+        <!-- {{ history_list1|length }} -->  
+
+
+        <script>
+            document.getElementById("id_delivery_address").value = "{{ user.userprofile.address }} {{ user.userprofile.city }} {{ user.userprofile.state }}";
+            document.getElementById("id_suggested_price").readOnly = true;
+            document.getElementById("id_delivery_address").readOnly = true;
+            document.getElementById("id_total_due").readOnly = true;
+
+        </script>
+
+
+
+
+<!--         <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+            {{ form.delivery_date }}
             <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
             </div>
-        </div>
+        </div> -->
 
-        <script>
+<!--          <script>
+              $(function() {
+                $( ".datepicker" ).datepicker({
+                  changeMonth: true,
+                  changeYear: true,
+                  yearRange: "1900:2012",
+                  // You can put more options here.
+
+                });
+              });
+          </script>
+ -->
+
+
+
+<!--         {{ form.gallons_requested|as_crispy_field}}
+        {{form_his|crispy}} -->
+        
+
+
+<!--         <script>
             $(function () {
               $("#datetimepicker1").datetimepicker({
                 format: 'DD/MM/YYYY HH:mm',
@@ -27,11 +59,11 @@
               });
             });
         </script>
-
+ -->
         <!-- {{ form.delivery_address|as_crispy_field }} -->
 
 
-        <div class="form-group">
+<!--         <div class="form-group">
             <label for="deliveryaddress"><b>Delivery Address:</b></label>
             <input type="text" readonly class="form-control" id="formGroupExampleInput3" value= "{{ user.userprofile.address }} {{ user.userprofile.city }} {{ user.userprofile.state }}" >
 
@@ -45,9 +77,11 @@
         <div class="form-group">
             <label for="amountDue"><b>Total Amount Due:</b></label>
             <input type="text" readonly class="form-control" id="formGroupExampleInput5" placeholder="Total Due">
-        </div>
+        </div> -->
         
         <button type="button" onclick="calculate()" style="margin:10px;height:50px;width:200px", class='btn btn-success' >Get Price</button>
+        <!-- <button type="submit"  style="margin:10px;height:50px;width:200px", class='btn btn-success' >Get Price</button> -->
+        <!-- <p id="demo"></p> -->
             <script>
                 
                 function calculate() {
@@ -58,26 +92,42 @@
                         g_r_Factor = 0.03;
                     } 
                     var location = "{{ user.userprofile.state }}"
-
-
                     if (location =="TX"){
                         var location_fact = 0.02
                     } else{
                         location_fact = 0.04
                     }
                     /*var location_fact = 0.02*/
-                    var history_factor = 0.01
+
+                    var log = "{{ history_list1|length }}"
+                    if (log > 0){
+                        var history_factor = 0.01
+                    } else{
+                        var history_factor = 0.0
+                    }
+
+                    var d = new Date(document.getElementById("id_delivery_date").value);
+                    var month = d.getMonth()+1;
+
+                    if (month == 6 || month == 7 || month == 8 ){
+                        var rate_factor =  0.04
+
+                    } else {
+                        var rate_factor =  0.03
+                    }
+
+
+
                     var company_factor = 0.1
-                    var rate_factor =  0.03
                     var margin = 1.50 * (location_fact - history_factor + g_r_Factor + company_factor +rate_factor)
                     var Suggested_Price = 1.50 + margin; 
                     var Total = Suggested_Price * gallons; 
 
-                    document.getElementById("formGroupExampleInput4").value = Suggested_Price;
-                    document.getElementById("formGroupExampleInput5").value = Total;
+                    document.getElementById("id_suggested_price").value = Suggested_Price;
+                    document.getElementById("id_total_due").value = Total;
 
                 } 
             </script>
-        <button type="submit", style="margin:10px;height:50px;width:200px", class='btn btn-success'>Submit Quote</button>
+        <button type="submit", style="margin:10px;height:50px;width:200px", class='btn btn-success'>Save Quote</button>
     </form>    
 {% endblock content %}
