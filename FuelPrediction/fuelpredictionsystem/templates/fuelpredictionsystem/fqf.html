@@ -9,9 +9,8 @@
         {% csrf_token %}
         <!-- {{form|crispy}}  -->     
         {{ form.gallons_requested|as_crispy_field}}
-        {{ form.delivery_date}}
         
-    <!--    <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+       <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
             {{ form.delivery_date|as_crispy_field }}
             <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -29,7 +28,7 @@
                 }
               });
             });
-        </script> -->
+        </script> 
 
         <!-- {{ form.delivery_address|as_crispy_field }} -->
 

@@ -23,16 +23,16 @@ class UserProfile(models.Model):
 class FuelQuoteForm(models.Model):
 	gallons_requested = models.IntegerField(
 		#required=True, 
-		max_value=10000, 
-		min_value=1
+		#maxval=10000, 
+		#minval=1
 		)
 	
 	delivery_date = models.DateField(
 		required=True,
 		localize=True,
-		widget=models.DateInput(format='%m/%d/%Y', attrs={
-			'class': 'form-control datetimepicker-input',
-			'data-target': '#datetimepicker1'}),
+#		widget=models.DateInput(format='%m/%d/%Y', attrs={
+#			'class': 'form-control datetimepicker-input',
+#			'data-target': '#datetimepicker1'}),
 		input_formats='%m/%d/%Y'
 	)
 

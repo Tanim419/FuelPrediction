@@ -57,6 +57,9 @@ class  FuelQuoteForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ["gallons_requested", "delivery_date", "delivery_address", "location", "season"]
+		widget = {forms.DateInput(format='%m/%d/%Y', attrs={
+			'class': 'form-control datetimepicker-input',
+			'data-target': '#datetimepicker1'})}
 
 	# def save(self, commit=True):
 	# 	user = super(FuelQuoteForm, self).save(commit=False)
